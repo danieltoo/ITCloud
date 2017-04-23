@@ -2,4 +2,4 @@
 
 <h6>Plataforma de compartición de archivos</h6>
 
-Visita la plataforma <a href="https://itcloudmx.firebaseapp.com/home">Aqui</a>
+Visita la plataforma <a href="https://itcloudmx.firebaseapp.com/">Aqui</a>
