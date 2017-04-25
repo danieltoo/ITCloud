@@ -16,6 +16,7 @@ import Footer from './components/Footer'
 import Landing from './routes/Landing'
 import Home from './routes/Home'
 import Mensajes from './routes/Mensajes'
+import Archivos from './routes/Archivos'
 import Recientes from './routes/Recientes'
 import NotFound from './routes/404'
 
@@ -109,6 +110,14 @@ class App extends Component {
               <Route exact path="/mensajes" render={() => (
                 this.state.user ? (
                   <Mensajes user={this.state.user}/>
+                ) : (
+                  <Redirect to="/"/>
+                )
+              )}/>
+
+              <Route exact path="/archivos" render={() => (
+                this.state.user ? (
+                  <Archivos user={this.state.user}/>
                 ) : (
                   <Redirect to="/"/>
                 )
