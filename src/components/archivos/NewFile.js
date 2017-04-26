@@ -28,15 +28,65 @@ class NewFile extends Component {
     super(props);
     this.addThisTopic = this.addThisTopic.bind(this)
     this.removeThisTopic = this.removeThisTopic.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.state = {
-      topics : []
+      topics : [],
+      file : null,
+      unploadValue:0
     }
    
   }
   handleSubmit(e) {
         e.preventDefault();
+        let file = this.state.file
+        let storageRef = firebase.storage().ref(`Documentos/${file.name}`)
+        let task = storageRef.put(file)
+
+        var URL ="" 
+        var content="" 
+        var name=""
+
+        task.on('state_changed', (snapshot) => {
+         let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) *100
+
+         this.setState({
+           unploadValue:percentage
+         })
+
+        }, (error) => {
+
+         message : `ha ocurridoun error ${error.message}`
+
+        }, () => {
+          URL = task.snapshot.downloadURL
+          content = task.snapshot.metadata.contentType
+          name = task.snapshot.metadata.name
+
+          var key = firebase.database().ref('Documentos/' ).push({
+            titulo : ReactDOM.findDOMNode(this.refs.titulo).value,
+            nombre  : name ,
+            usuario : this.props.user.displayName, 
+            downloadURL : URL,
+            temas : this.state.topics,
+            contentType : content 
+          }).key
+
+          firebase.database().ref('Usuarios/'+this.props.user.displayName+"/documentos/" + key ).set({
+            titulo : ReactDOM.findDOMNode(this.refs.titulo).value
+          })
+
+          this.setState({
+            message:"Archivo Subido"
+          })
+
+        })
 
   }
+  handleOnChange (event){
+      let file = event.target.files[0]
+      this.setState({file : file})
+    }
+
   addThisTopic(){
     let topic = "#" + ReactDOM.findDOMNode(this.refs.topics).value
     this.setState(prevState => { 
@@ -59,7 +109,6 @@ class NewFile extends Component {
   
   render() {
     return (
-      
         <Modal
           fixedFooter
           actions={
@@ -77,7 +126,7 @@ class NewFile extends Component {
               <Row>
                 <div className="input-field col s12">
                   <i className="material-icons prefix">format_quote</i>
-                  <input id="icon_prefix2" ref="tema" required="required" type="text" className="validate" />
+                  <input id="icon_prefix2" ref="titulo" required="required" type="text" className="validate" />
                   <label htmlFor="icon_prefix2">Titulo</label>
                 </div>
               </Row>
@@ -85,12 +134,20 @@ class NewFile extends Component {
                   <div className="file-field input-field">
                     <div className="btn">
                       <span>File</span>
-                      <input type="file" />
+                      <input type="file" ref="file"  onChange={this.handleOnChange.bind(this)} />
                     </div>
                     <div className="file-path-wrapper">
-                      <input className="file-path validate" type="text" />
+                      <input className="file-path validate"  type="text" />
                     </div>
                   </div>
+              </Row>
+              <Row>
+                <div className="col s12">
+                  <div className="progress">
+                    <div className="determinate" style={{width : this.state.unploadValue +"%"}} ></div>
+                  </div>
+                </div>
+                {this.state.unploadValue}
               </Row>
               <Row>
                 <div className="input-field col s10">
@@ -113,6 +170,9 @@ class NewFile extends Component {
               </Row>
               <Row className="right-align">
                 <Button waves='light' >Comenzar<Icon right>send</Icon></Button>
+              </Row>
+              <Row className="right-align">
+                {this.state.message}
               </Row>
             </div> 
           </form>   

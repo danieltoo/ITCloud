@@ -17,7 +17,7 @@ class FloatButton extends Component {
 	              </li>
 	              <li><a className="btn-floating yellow darken-1"><i className="material-icons">format_quote</i></a></li>
 	              <li>
-	              	<NewFile />
+	              	<NewFile user={this.props.user} />
 	              </li>
 	            
 	            </ul>

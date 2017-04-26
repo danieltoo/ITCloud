@@ -52,7 +52,7 @@ class Navbar extends React.Component {
               </ul>
             </div>
           </nav>
-          <FloatButton />
+          <FloatButton user={this.props.user}/>
         </header>
     )
   }
