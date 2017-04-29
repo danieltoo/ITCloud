@@ -14,7 +14,7 @@ class Chip extends Component {
     this.props.remove(this.props.topic)
   }
   render() {
-    return (
+    return ( 
         <div className="chip">
           {this.props.topic}
           <i className="close material-icons" onClick={this.remove}>close</i>
@@ -39,7 +39,7 @@ class NewFile extends Component {
   handleSubmit(e) {
         e.preventDefault();
         let file = this.state.file
-        let storageRef = firebase.storage().ref(`Documentos/${file.name}`)
+        let storageRef = firebase.storage().ref('Documentos/'+this.props.user.displayName+'/'+file.name)
         let task = storageRef.put(file)
 
         var URL ="" 
@@ -54,25 +54,22 @@ class NewFile extends Component {
          })
 
         }, (error) => {
-
-         message : `ha ocurridoun error ${error.message}`
-
+         this.setState({
+            message:`ha ocurridoun error ${error.message}`
+          })
         }, () => {
           URL = task.snapshot.downloadURL
           content = task.snapshot.metadata.contentType
           name = task.snapshot.metadata.name
+          
 
-          var key = firebase.database().ref('Documentos/' ).push({
+          firebase.database().ref('Documentos/'+this.props.user.displayName).push({
             titulo : ReactDOM.findDOMNode(this.refs.titulo).value,
             nombre  : name ,
             usuario : this.props.user.displayName, 
             downloadURL : URL,
             temas : this.state.topics,
             contentType : content 
-          }).key
-
-          firebase.database().ref('Usuarios/'+this.props.user.displayName+"/documentos/" + key ).set({
-            titulo : ReactDOM.findDOMNode(this.refs.titulo).value
           })
 
           this.setState({
@@ -96,8 +93,9 @@ class NewFile extends Component {
   }
   removeThisTopic(key){
     let temp = []
+
     for (let i = 0 ; i < this.state.topics.length-1 ; i++){
-      if (this.state.topics[i] != key ){
+      if (this.state.topics[i] !== key ){
         temp.push(this.state.topics[i])
       }
     }

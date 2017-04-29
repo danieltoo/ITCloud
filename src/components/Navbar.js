@@ -9,7 +9,7 @@ class Navbar extends React.Component {
   renderUserData () {
     return (
       <header >
-          <nav className="nav-extended green darken-4">
+          <nav className="nav-extended green darken-4 z-depth-3">
             <div className="nav-wrapper ">
               <a id="logo-container" href="#" className="brand-logo">
                 <img  alt="" src="/assets/img/logoITCLOUDB.png" width={50} height={50}  />
@@ -36,10 +36,10 @@ class Navbar extends React.Component {
               </ul>
               <NavMovil user={this.props.user} onLogout={this.props.onLogout}/>
             </div>
-            <div className="nav-content">
+            <div className="nav-content hide-on-large-only">
               <ul className="tabs">
                 <li className="tab">
-                  <NavLink to="/home" activeClassName="active" className="green-text text-darken-4"><i className="material-icons ">cloud</i> </NavLink>
+                  <NavLink to="/home" activeClassName="active" className="green-text text-darken-4 active"><i className="material-icons ">cloud</i> </NavLink>
                 </li>
                 <li className="tab">
                   <NavLink to="/recientes" activeClassName="active" className="green-text text-darken-4"> <i className="material-icons ">schedule</i></NavLink>

@@ -7,7 +7,7 @@ class FloatButton extends Component {
 
 	render() {
 		return(
-			<div className="fixed-action-btn horizontal click-to-toggle">
+			<div className="fixed-action-btn horizontal click-to-toggle ">
 	            <a className="btn-floating btn-large red">
 	              <i className="large material-icons">mode_edit</i>
 	            </a>
