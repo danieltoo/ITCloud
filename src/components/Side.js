@@ -10,7 +10,7 @@ class Side extends React.Component{
 	          options={{ closeOnClick: true }}
 	          >
 	          <SideNavItem userView 
-	            user={{
+	            user={{ 
 	    		  background: '/assets/img/default_cover_photo_3_google_plus.jpg' ,
 	              image: this.props.user.photoURL,
 	              name: this.props.user.displayName,

@@ -50,7 +50,7 @@ class NewFile extends Component {
          let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) *100
 
          this.setState({
-           unploadValue:percentage
+           unploadValue: Math.round(percentage)
          })
 
         }, (error) => {
@@ -61,7 +61,7 @@ class NewFile extends Component {
           URL = task.snapshot.downloadURL
           content = task.snapshot.metadata.contentType
           name = task.snapshot.metadata.name
-          
+          var fecha=new Date()
 
           firebase.database().ref('Documentos/'+this.props.user.displayName).push({
             titulo : ReactDOM.findDOMNode(this.refs.titulo).value,
@@ -69,7 +69,9 @@ class NewFile extends Component {
             usuario : this.props.user.displayName, 
             downloadURL : URL,
             temas : this.state.topics,
-            contentType : content 
+            contentType : content,
+            fecha : fecha.getDate() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":"+ fecha.getMinutes()
+
           })
 
           this.setState({
@@ -86,14 +88,24 @@ class NewFile extends Component {
 
   addThisTopic(){
     let topic = "#" + ReactDOM.findDOMNode(this.refs.topics).value
-    this.setState(prevState => { 
-      topics : prevState.topics.push(topic)
-    })
+    let existencia = false
+    for (let cont = 0 ; cont < this.state.topics.length ; cont++) {
+      if (this.state.topics[cont] === topic) {
+        existencia = true
+      }
+    }
+    if (existencia){
+      console.error("Valor repetido")
+    }else {
+      this.setState(prevState => { 
+        // eslint-disable-next-line 
+        topics : prevState.topics.push(topic)
+      })
+    }
     ReactDOM.findDOMNode(this.refs.topics).value = ""
   }
   removeThisTopic(key){
     let temp = []
-
     for (let i = 0 ; i < this.state.topics.length-1 ; i++){
       if (this.state.topics[i] !== key ){
         temp.push(this.state.topics[i])
@@ -106,6 +118,7 @@ class NewFile extends Component {
   }
   
   render() {
+    
     return (
         <Modal
           fixedFooter
@@ -140,12 +153,12 @@ class NewFile extends Component {
                   </div>
               </Row>
               <Row>
-                <div className="col s12">
-                  <div className="progress">
+                <div className="col s11">
+                  <div className="progress center-align">
                     <div className="determinate" style={{width : this.state.unploadValue +"%"}} ></div>
                   </div>
                 </div>
-                {this.state.unploadValue}
+                {this.state.unploadValue}%
               </Row>
               <Row>
                 <div className="input-field col s10">

@@ -17,38 +17,45 @@ class MensajeConver extends Component {
   funcionCompara () {
     if (this.props.user === this.props.propietario) {
       return (
-        <div className="left-align" >
+        <div className="card-panel  green lighten-5 black-text left-align">
           <Row>
-            <div className="col s9">
-                {this.props.contenido}<br/>
-                {this.props.fecha}
+             <div className=" col l11 s10">
+              <p className="row" >
+                {this.props.contenido}
+              </p>
+              {this.props.fecha}
+             </div>
+            <div className="col s2 l1" >
+                <ImgItemList id={this.props.user} />
             </div> 
-            <div className="col s3 left-align">
-              <ImgItemList id={this.props.user} />
-            </div>
           </Row>
-        </div>
+          
+          </div>
         )
     }else {
       return (
-        <div className="right-align" >
-          <Row>
-            <div className="col s3">
-              <ImgItemList id={this.props.user} />
-            </div>
-            <div className="col s9 right-align">
-                {this.props.contenido}
+          <div className="card-panel black-text  right-align">
+            <Row>
+               
+              <div className="col s2 l1" >
+                  <ImgItemList id={this.props.user} />
               </div> 
-              {this.props.fecha}
-          </Row>
-        </div>
+              <div className=" col l11 s10">
+                <p className="row" >
+                  {this.props.contenido}
+                </p>
+                {this.props.fecha}
+               </div>
+            </Row>
+          
+          </div>
         
         )
     }
   }
   render() {
     return (
-        <li className="collection-item">
+        <li >
           {this.funcionCompara()}
         </li>
       )
@@ -77,7 +84,7 @@ class MensajeForm extends Component {
             <Row>
               <div className="input-field col s9">
                 <i className="material-icons prefix">message</i>
-                <textarea id="icon_prefix4" ref="contenido" required="required" className="materialize-textarea validate" />
+                <textarea id="icon_prefix4" ref="contenido" required="required" className="materialize-textarea validate " />
                 <label htmlFor="icon_prefix4">Mensaje</label>
               </div>
               <Button waves='light' >Enviar<Icon right>send</Icon></Button>
@@ -146,9 +153,9 @@ class Conversacion extends Component {
 
   render() {
     return(
-      <div className="card">
-        <h5 className="center-align"><strong>{this.state.tema}</strong></h5>
-        <ul className="collection section" style={{overflow: "scroll" ,  height : "250px"}}>
+      <div className=""  >
+        <h6 className="center-align"><br/><strong>{this.state.tema}</strong></h6>
+        <ul className=" " style={{overflow: "scroll" ,  height : "250px"}}>
         {this.state.mensajes.map( mensage => (
           <MensajeConver key={mensage.id} propietario={this.state.propietario} user={mensage.item.usuario} contenido={mensage.item.contenido} fecha={mensage.item.fecha} />
         ))}

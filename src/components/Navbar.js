@@ -11,23 +11,23 @@ class Navbar extends React.Component {
       <header >
           <nav className="nav-extended green darken-4 z-depth-3">
             <div className="nav-wrapper ">
-              <a id="logo-container" href="#" className="brand-logo">
-                <img  alt="" src="/assets/img/logoITCLOUDB.png" width={50} height={50}  />
-              </a>
+              <NavLink id="logo-container" to="/home" className="brand-logo">
+                <img  alt="" src="/assets/img/logoITCLOUDB.png" width={40} height={60} style={{paddingTop : "10px",paddingBottom:"10px"}} />
+              </NavLink>
               <ul className="right hide-on-med-and-down "> 
                 <li>
-                  <NavLink to="/"><i className="material-icons left">cloud</i> Mi Espacio</NavLink>
+                  <NavLink to="/archivos"><i className="material-icons left">cloud</i> Archivos</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/recientes"> <i className="material-icons left">schedule</i>Recientes</NavLink>
+                  <NavLink to="/mensajes"> <i className="material-icons left">question_answer</i>Mensajes</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/sugeridos">
-                   <i className="material-icons left">thumb_up</i> Sugeridos
+                  <NavLink to="/foros">
+                   <i className="material-icons left">supervisor_account</i> Foros
                   </NavLink>
                 </li>
                 <li className="text-center hidden-sm">
-                  <img  alt="" className="circle rigth" width={50} height={50} src={this.props.user.photoURL}  />
+                  <img  alt="" className="circle rigth" width={40} height={60} src={this.props.user.photoURL} style={{paddingTop : "10px",paddingBottom:"10px"}} />
                 </li>
                 <li className="text-center">
                     <Side user={this.props.user} onLogout={this.props.onLogout}/>
@@ -36,20 +36,24 @@ class Navbar extends React.Component {
               </ul>
               <NavMovil user={this.props.user} onLogout={this.props.onLogout}/>
             </div>
-            <div className="nav-content hide-on-large-only">
+            <div className="nav-content hide-on-large-only black">
               <ul className="tabs">
-                <li className="tab">
-                  <NavLink to="/home" activeClassName="active" className="green-text text-darken-4 active"><i className="material-icons ">cloud</i> </NavLink>
-                </li>
-                <li className="tab">
-                  <NavLink to="/recientes" activeClassName="active" className="green-text text-darken-4"> <i className="material-icons ">schedule</i></NavLink>
-                </li>
-                <li className="tab">
-                  <NavLink to="/sugeridos" activeClassName="active" className="green-text text-darken-4">
-                   <i className="material-icons ">thumb_up</i> 
+                <li className="tab active">
+                  <NavLink to="/archivos" className="green-text text-darken-4 active">
+                    <i className="material-icons">cloud</i>
                   </NavLink>
                 </li>
-              </ul>
+                <li className="tab">
+                  <NavLink to="/mensajes" className="green-text text-darken-4">
+                   <i className="material-icons">question_answer</i>
+                  </NavLink>
+                </li>
+                <li className="tab">
+                  <NavLink to="/foros" className="green-text text-darken-4">
+                   <i className="material-icons">supervisor_account</i>
+                  </NavLink>
+                </li>
+              </ul> 
             </div>
           </nav>
           <FloatButton user={this.props.user}/>
