@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import firebase from '../../firebase'
+import logo from '../../logo.svg'
 import { Icon,  Button, Row, Modal} from 'react-materialize'
 
 
@@ -32,7 +33,10 @@ class NewFile extends Component {
     this.state = {
       topics : [],
       file : null,
-      unploadValue:0
+      unploadValue:0,
+      img: "",
+      unploadImg : 0,
+      imgFile: null,
     }
    
   }
@@ -65,18 +69,27 @@ class NewFile extends Component {
             name = task.snapshot.metadata.name
             var fecha=new Date()
 
-            firebase.database().ref('Documentos/'+this.props.user.displayName).push({
-              titulo : ReactDOM.findDOMNode(this.refs.titulo).value,
-              descripcion : ReactDOM.findDOMNode(this.refs.descripcion).value,
-              nombre  : name ,
-              usuario : this.props.user.displayName, 
-              downloadURL : URL,
-              temas : this.state.topics,
-              contentType : content,
-              fecha : fecha.getDate() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":"+ fecha.getMinutes()
+            let imgRef = firebase.storage().ref('Imagenes/'+this.props.user.displayName+'/'+this.state.imgFile.name)
+            let taskImg = imgRef.put(this.state.imgFile)
+
+            taskImg.on('state_changed', (snapshot) => {},
+            (error) => { 
+              this.setState({message : `ha ocurridoun error ${error.message}`})
+            }, () => { 
+              firebase.database().ref('Documentos/'+this.props.user.displayName).push({
+                titulo : ReactDOM.findDOMNode(this.refs.titulo).value,
+                descripcion : ReactDOM.findDOMNode(this.refs.descripcion).value,
+                nombre  : name ,
+                usuario : this.props.user.displayName, 
+                downloadURL : URL,
+                temas : this.state.topics,
+                contentType : content,
+                img :  taskImg.snapshot.downloadURL,
+                fecha : fecha.getDate() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":"+ fecha.getMinutes()
+
+              })
 
             })
-
             this.setState({
               message:"Archivo Subido"
             })
@@ -85,9 +98,38 @@ class NewFile extends Component {
         }
 
   }
+  componentDidMount() {
+    this.setState({img : logo})
+  }
   handleOnChange (event){
       let file = event.target.files[0]
       this.setState({file : file})
+    }
+
+
+  changeImg (event){
+      let file = event.target.files[0] 
+
+      let storageRef = firebase.storage().ref( 
+        'Temps/'+this.props.user.displayName
+      )
+      let task = storageRef.put(file) 
+
+      task.on('state_changed', (snapshot) => {
+        let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) *100
+        this.setState({ unploadImg:percentage})
+
+      }, (error) => { 
+
+        this.setState({message : `ha ocurridoun error con tu imagen`})
+
+      }, () => { 
+
+        this.setState({
+          message:"Imagen capturada",img: task.snapshot.downloadURL, imgFile: file
+        })
+
+      })
     }
 
   addThisTopic(){
@@ -146,11 +188,28 @@ class NewFile extends Component {
                 </div>
               </Row>
               <Row>
-                <div className="input-field col s12">
+                <div className="input-field col l8">
                   <i className="material-icons prefix">mode_edit</i>
                   <textarea id="icon_prefix2" ref="descripcion" className="materialize-textarea"></textarea>
                   <label htmlFor="icon_prefix2">Descripción</label>
                 </div>
+
+                <div className="col l4">
+                  <Row>
+                    <div className="file-field input-field right col l12 m12 s12 center">
+                        <img alt="" ref="imgDoc" src={this.state.img} style={{width:"100%" , height:"100%"}} />
+                        <input type="file" onChange={this.changeImg.bind(this)} />
+                    </div>
+                  </Row>
+                  <Row>
+                    <div className="col s8 offset-s3 center">
+                      <div className="progress center-align">
+                        <div className="determinate" style={{width : this.state.unploadImg +"%"}} ></div>
+                      </div>
+                    </div>
+                  </Row>
+                </div>
+                
               </Row>
               <Row>
                 <div className="input-field col s10">
