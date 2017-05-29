@@ -14,7 +14,7 @@ class ItemList extends Component {
       fecha : ""
     }
   }
-  componentWillMount() {
+  componentDidMount() {
     let t = this
     var datosConversacion = firebase.database().ref('Conversaciones/' + t.props.item.key +'/' );
     datosConversacion.on('value', function(snapshot) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import IndexBanner from '../components/landing/IndexBanner.js'
 import fondo from '../img/tecgreen.jpg'
+import Footer from '../components/Footer'
 
 class Landing extends React.Component {
 	
@@ -10,7 +11,9 @@ class Landing extends React.Component {
 				<main>
 					<IndexBanner fondo={fondo}/>
 				</main>
+				<Footer />
 			</div>
+
 		)
 	}
 }

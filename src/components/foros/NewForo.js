@@ -23,72 +23,32 @@ class Chip extends Component {
   } 
 }
 
-class NewFile extends Component {
+class NewForo extends Component {
   constructor(props) {
     super(props);
     this.addThisTopic = this.addThisTopic.bind(this)
     this.removeThisTopic = this.removeThisTopic.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.state = {
-      topics : [],
-      file : null,
-      unploadValue:0
+      topics : []
     }
    
   }
+
   handleSubmit(e) {
-        e.preventDefault();
-        console.log("se ejecutó")
-        if (this.state.file){
-          let file = this.state.file
-          let storageRef = firebase.storage().ref('Documentos/'+this.props.user.displayName+'/'+file.name)
-          let task = storageRef.put(file)
-
-          var URL ="" 
-          var content="" 
-          var name=""
-
-          task.on('state_changed', (snapshot) => {
-           let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) *100
-
-           this.setState({
-             unploadValue: Math.round(percentage)
-           })
-
-          }, (error) => {
-           this.setState({
-              message:`ha ocurridoun error ${error.message}`
-            })
-          }, () => {
-            URL = task.snapshot.downloadURL
-            content = task.snapshot.metadata.contentType
-            name = task.snapshot.metadata.name
-            var fecha=new Date()
-
-            firebase.database().ref('Documentos/'+this.props.user.displayName).push({
-              titulo : ReactDOM.findDOMNode(this.refs.titulo).value,
-              descripcion : ReactDOM.findDOMNode(this.refs.descripcion).value,
-              nombre  : name ,
-              usuario : this.props.user.displayName, 
-              downloadURL : URL,
-              temas : this.state.topics,
-              contentType : content,
-              fecha : fecha.getDate() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":"+ fecha.getMinutes()
-
-            })
-
-            this.setState({
-              message:"Archivo Subido"
-            })
-
-          })
-        }
+    e.preventDefault();
+    var fecha=new Date()
+    let t = this
+    firebase.database().ref('Posts/'+this.props.user.displayName).push({
+      titulo : ReactDOM.findDOMNode(this.refs.titulo).value,
+      descripcion : ReactDOM.findDOMNode(this.refs.descripcion).value,
+      usuario : this.props.user.displayName, 
+      temas: t.state.topics,
+      fecha : fecha.getDate() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":"+ fecha.getMinutes()
+    })
+        
 
   }
-  handleOnChange (event){
-      let file = event.target.files[0]
-      this.setState({file : file})
-    }
 
   addThisTopic(){
     let topic = "#" + ReactDOM.findDOMNode(this.refs.topics).value
@@ -131,13 +91,13 @@ class NewFile extends Component {
               
             </div>}
           trigger={
-            <a className="btn-floating blue">
-              <i className="material-icons">attach_file</i>
+            <a className="btn-floating yellow">
+              <i className="material-icons">format_quote</i>
             </a>
           }>
           <form onSubmit={this.handleSubmit} className="col s12">
             <div >
-              <h6 className="center-align"><strong>Subir Nuevo Archivo</strong></h6>
+              <h6 className="center-align"><strong>Crear Post</strong></h6>
               <Row>
                 <div className="input-field col s12">
                   <i className="material-icons prefix">format_quote</i>
@@ -171,33 +131,12 @@ class NewFile extends Component {
                   ))}
                 </div>
               </Row>
-              <Row>
-                  <div className="file-field input-field col s12">
-                    <div className="btn">
-                      <span>Archivo</span>
-                      <input type="file" ref="file"  onChange={this.handleOnChange.bind(this)} />
-                    </div>
-                    <div className="file-path-wrapper">
-                      <input className="file-path validate"  type="text" />
-                    </div>
-                  </div>
-              </Row>
-              <Row>
-                <div className="col s8 offset-s3 center">
-                  <div className="progress center-align">
-                    <div className="determinate" style={{width : this.state.unploadValue +"%"}} ></div>
-                  </div>
-                </div>
-                {this.state.unploadValue}%
-              </Row>
+              
             </div> 
             <div>
               <Row className="right-align" >
-                <Button waves='light' >Subir<Icon right>send</Icon></Button>
+                <Button waves='light' >Crear<Icon right>send</Icon></Button>
               </Row>
-              <div className="center">
-                {this.state.message}
-              </div>
               
             </div>
             </form>  
@@ -207,4 +146,4 @@ class NewFile extends Component {
   }
 }
 
-export default NewFile ;
+export default NewForo ;

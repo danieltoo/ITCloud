@@ -10,7 +10,7 @@ class Navbar extends React.Component {
     return (
       <header >
           <nav className="nav-extended green darken-4 z-depth-3">
-            <div className="nav-wrapper ">
+            <div className="nav-wrapper container">
               <NavLink id="logo-container" to="/home" className="brand-logo">
                 <img  alt="" src="/assets/img/logoITCLOUDB.png" width={40} height={60} style={{paddingTop : "10px",paddingBottom:"10px"}} />
               </NavLink>
@@ -22,7 +22,7 @@ class Navbar extends React.Component {
                   <NavLink to="/mensajes"> <i className="material-icons left">question_answer</i>Mensajes</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/foros">
+                  <NavLink to="/posts">
                    <i className="material-icons left">supervisor_account</i> Foros
                   </NavLink>
                 </li>
@@ -38,7 +38,7 @@ class Navbar extends React.Component {
             </div>
             <div className="nav-content hide-on-large-only black">
               <ul className="tabs">
-                <li className="tab active">
+                <li className="tab">
                   <NavLink to="/archivos" className="green-text text-darken-4 active">
                     <i className="material-icons">cloud</i>
                   </NavLink>
@@ -49,7 +49,7 @@ class Navbar extends React.Component {
                   </NavLink>
                 </li>
                 <li className="tab">
-                  <NavLink to="/foros" className="green-text text-darken-4">
+                  <NavLink to="/posts" className="green-text text-darken-4">
                    <i className="material-icons">supervisor_account</i>
                   </NavLink>
                 </li>

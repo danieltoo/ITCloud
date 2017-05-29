@@ -17,45 +17,49 @@ class MensajeConver extends Component {
   funcionCompara () {
     if (this.props.user === this.props.propietario) {
       return (
-        <div className="card-panel  green lighten-5 black-text left-align">
           <Row>
-             <div className=" col l11 s10">
-              <p className="row" >
-                {this.props.contenido}
-              </p>
-              {this.props.fecha}
-             </div>
-            <div className="col s2 l1" >
+              <div className="col l9 left-align">
+              <span className="title bold"></span>
+                <p>
+                  {this.props.contenido}
+                  <br/>
+                  <span className="blue-text">
+                    {this.props.fecha}
+                  </span>
+                </p>
+               </div>
+               <div className="col l3 center"><br/>
                 <ImgItemList id={this.props.user} />
-            </div> 
-          </Row>
-          
-          </div>
+              </div>
+
+            </Row>
         )
     }else {
       return (
-          <div className="card-panel black-text  right-align">
             <Row>
-               
-              <div className="col s2 l1" >
-                  <ImgItemList id={this.props.user} />
-              </div> 
-              <div className=" col l11 s10">
-                <p className="row" >
+              <div className="col l3 center"><br/>
+                <ImgItemList id={this.props.user} />
+              </div>
+
+              <div className="col l9 right-align">
+              <span className="title bold"></span>
+                <p>
                   {this.props.contenido}
+                  <br/>
+                  <span className="blue-text">
+                    {this.props.fecha}
+                  </span>
                 </p>
-                {this.props.fecha}
                </div>
+
             </Row>
-          
-          </div>
         
         )
     }
   }
   render() {
     return (
-        <li >
+        <li className="collection rigth bold">
           {this.funcionCompara()}
         </li>
       )
@@ -80,10 +84,9 @@ class MensajeForm extends Component {
   }
   render() {
     return (
-        <form onSubmit={this.handleSubmit} >
+        <form onSubmit={this.handleSubmit}>
             <Row>
               <div className="input-field col s9">
-                <i className="material-icons prefix">message</i>
                 <textarea id="icon_prefix4" ref="contenido" required="required" className="materialize-textarea validate " />
                 <label htmlFor="icon_prefix4">Mensaje</label>
               </div>
@@ -94,6 +97,23 @@ class MensajeForm extends Component {
   }
 }
 
+class MensajesEnLista extends Component {
+  componentDidMount() {
+    ReactDOM.findDOMNode(this).scrollTop = 5000000
+  }
+  componentDidUpdate() {
+    ReactDOM.findDOMNode(this).scrollTop = 5000000
+  }
+  render() {
+    return(
+        <ul className=" " style={{overflow: "scroll" ,  height : "350px"}}>
+          {this.props.mensajes.map( mensage => (
+            <MensajeConver key={mensage.id} propietario={this.props.propietario} user={mensage.item.usuario} contenido={mensage.item.contenido} fecha={mensage.item.fecha} />
+          ))}
+        </ul>  
+      )
+  }
+}
 class Conversacion extends Component {
   constructor(props) {
     super(props);
@@ -150,16 +170,21 @@ class Conversacion extends Component {
     })
     
   }
-
+  muestraMensajes(){
+    return(
+      <MensajesEnLista mensajes={this.state.mensajes} propietario={this.state.propietario} />
+      )
+  }
+  noMuestraMensajes(){
+    return(
+        <div>No tienes mensajes</div>
+      )
+  }
   render() {
     return(
       <div className=""  >
         <h6 className="center-align"><br/><strong>{this.state.tema}</strong></h6>
-        <ul className=" " style={{overflow: "scroll" ,  height : "250px"}}>
-        {this.state.mensajes.map( mensage => (
-          <MensajeConver key={mensage.id} propietario={this.state.propietario} user={mensage.item.usuario} contenido={mensage.item.contenido} fecha={mensage.item.fecha} />
-        ))}
-        </ul>
+        {this.state.mensajes ? this.muestraMensajes() : this.noMuestraMensajes()}
         <MensajeForm user={this.state.propietario} conversacion={this.state.id} />
 
       </div>

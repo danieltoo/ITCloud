@@ -10,14 +10,13 @@ Import Files
 */
  // Componentes globales
 import Navbar from './components/Navbar'
-import Footer from './components/Footer'
 
 //Rutas
 import Landing from './routes/Landing'
 import Home from './routes/Home'
 import Mensajes from './routes/Mensajes'
 import Archivos from './routes/Archivos'
-import Foros from './routes/Foros'
+import Posts from './routes/Posts'
 import Recientes from './routes/Recientes'
 import NotFound from './routes/404'
 
@@ -35,7 +34,7 @@ class App extends Component {
       this.setState({ user })
     })
   }
-  
+   
   handleAuth(){
 
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -124,9 +123,9 @@ class App extends Component {
                 )
               )}/>
 
-              <Route exact path="/foros" render={() => (
+              <Route exact path="/posts" render={() => (
                 this.state.user ? (
-                  <Foros user={this.state.user}/>
+                  <Posts user={this.state.user}/>
                 ) : (
                   <Redirect to="/"/>
                 )
@@ -137,7 +136,7 @@ class App extends Component {
            </Switch>
         </div>
         
-        <Footer />
+        
      </div>
     </Router>
     );

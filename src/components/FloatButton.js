@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 
 import NewMensaje from './mensajes/NewMensaje'
 import NewFile from './archivos/NewFile'
+import NewForo from './foros/NewForo'
 
 class FloatButton extends Component {
 
@@ -12,17 +13,18 @@ class FloatButton extends Component {
 	              <i className="large material-icons">mode_edit</i>
 	            </a>
 	            <ul>
-	              <li>
-	                <NewMensaje user={this.props.user}/>
-	              </li>
-	              <li><a className="btn-floating yellow darken-1"><i className="material-icons">format_quote</i></a></li>
-	              <li>
-	              	<NewFile user={this.props.user} />
-	              </li>
-	            
+	              	<li>
+	                	<NewMensaje user={this.props.user}/>
+	              	</li>
+	              	<li>
+	                	<NewForo user={this.props.user}/>
+	              	</li>
+	            	<li>
+	              		<NewFile user={this.props.user} />
+	              	</li>
 	            </ul>
           	</div>
-			)
+		)
 	}
 }
 export default FloatButton;

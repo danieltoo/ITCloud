@@ -29,7 +29,7 @@ class Side extends React.Component{
 		          	</NavLink>
           		</li>
           		<li>
-		          	<NavLink to="/foros" >
+		          	<NavLink to="/posts" >
 		          		<Icon>supervisor_account</Icon>Foros
 		          	</NavLink>
 	          	</li>
