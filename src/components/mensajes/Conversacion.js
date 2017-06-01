@@ -150,6 +150,7 @@ class Conversacion extends Component {
 
   componentWillReceiveProps(nextProps) {
     let t = this
+    
     var datosConversacion = firebase.database().ref('Conversaciones/' + nextProps.match.params.id +'/' );
     datosConversacion.on('value', function(snapshot) {
       let temp = []
