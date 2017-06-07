@@ -39,7 +39,7 @@ export default class DocTargetPost extends Component {
   }
 	render() {
 		return (
-		 <div className="card col l4">
+		 <div className="card col l4 m6 s12">
 
 	        <div className="card-image" style={{width:"100%", height:200}} >
 	          	<img alt="" className="activator" src={this.props.doc.img} style={{height:"100%"}}/>

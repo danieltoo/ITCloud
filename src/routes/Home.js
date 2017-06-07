@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
-import firebase from '../firebase'
 import { Redirect} from 'react-router-dom'
 
 

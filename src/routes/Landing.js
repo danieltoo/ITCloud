@@ -5,7 +5,7 @@ import Footer from '../components/Footer'
 
 class Landing extends React.Component {
 	
-	render() {
+	render() { 
 		return (
 			<div>
 				<main>

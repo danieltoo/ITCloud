@@ -38,7 +38,7 @@ export default class NormalTargetPost extends Component {
   }
 	render() {
 		return (
-		 <div className="card col l4">
+		 <div className="card col l4 m6 s12">
 	        <div className="card-image " style={{width:"100%", height:200}} >
 	          	<img alt="" className="activator" src={this.props.post.img} style={{height:"100%"}}/>
 	        	<span className="btn-floating halfway-fab waves-effect waves-light green activator"><i className="material-icons">keyboard_arrow_up</i></span>
