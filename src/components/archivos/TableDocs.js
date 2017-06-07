@@ -24,7 +24,7 @@ class TableDocs extends Component {
 	}
 	render() {
 		return(
-		<table className=" highlight" >
+		<table className=" highlight " >
 	        <tbody>
 	          {this.state.docs.map((doc) => (
 	          	<ItemDocsTable key={doc.downloadURL} doc={doc} chageCurrentFile={this.props.chageCurrentFile} />

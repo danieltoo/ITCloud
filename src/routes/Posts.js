@@ -1,192 +1,585 @@
 import React,{Component} from 'react';
-import logo from '../logo.svg'
+import ReactDOM from 'react-dom'
+import { BrowserRouter as Router, Route,NavLink, Redirect} from 'react-router-dom'
 import firebase from '../firebase.js'
-import { BrowserRouter as Router, Route,NavLink , Redirect} from 'react-router-dom'
+import PostsCreados from '../components/foros/PostsCreados.js'
+import PostsArchivos from '../components/foros/PostsArchivos.js'
+import NormalTargetPost from '../components/foros/NormalTargetPost.js'
+import DocTargetPost from '../components/foros/DocTargetPost.js'
 
-class NormalPost extends Component {
-	render() {
-		return (
-	    <div className="card col s12 m4 l4 z-depth-3">
-	    	<br/>
-		    <div className="card-image waves-effect waves-block waves-light">
-		      <img  className="activator" src={this.props.post.img}/>
-		    </div>
-		    <div className="card-content">
-		      <span className="card-title activator grey-text text-darken-4">{this.props.post.titulo}<i className="material-icons right">more_vert</i></span>
-		      <p><a href="#">Ver Foro</a></p>
-		    </div>
-		    <div className="card-reveal ">
-		      <span className="card-title grey-text text-darken-4">{this.props.post.titulo}<i className="material-icons right">close</i></span>
-		      <p>{this.props.post.descripcion} {this.props.post.usuario}</p>
-		    </div>
-		 </div>
-			)
-	}
-}
 
-class DocPost extends Component {
-	render() {
-		return (
-	    <div className=" col s12 m4 l4 z-depth-3">
-	    	<br/>
-		    <div className="card-image waves-effect waves-block waves-light">
-		      <img style={{width:"100%" , height: "100%"}} className="activator" src={this.props.doc.img}/>
-		    </div>
-		    <div className="card-content">
-		      <span className="card-title activator grey-text text-darken-4">{this.props.doc.titulo}<i className="material-icons right">more_vert</i></span>
-		      <p><a href="#">Ver archivo</a></p>
-		    </div>
-		    <div className="card-reveal ">
-		      <span className="card-title grey-text text-darken-4">{this.props.doc.titulo}<i className="material-icons right">close</i></span>
-		      <p>{this.props.doc.descripcion}</p> {this.props.doc.usuario}
-		    </div>
-		 </div>
-			)
-	}
-}
+class PostBusqueda extends Component {
+	
 
-class PostsCreados extends Component{
 	constructor(props) {
 		super(props);
+		this.handleChange = this.handleChange.bind(this)
+		this.showPosts =this.showPosts.bind(this)
+		this.showDocs =this.showDocs.bind(this)
 		this.state = {
-			posts: []
+			text : '',
+			documentos : [],
+			posts : []
+		}
+	}
+
+	componentDidMount() {
+		let t =this
+   		let search=""
+    	let artRel = firebase.database().ref('Foros/');
+		artRel.on('value', function(snapshot) {
+			let tempDocs = []
+			let tempPosts = []
+			for (let art in snapshot.val()){
+				let artRelin = firebase.database().ref(`${snapshot.val()[art].tipo}/${snapshot.val()[art].usuario}/${art}`);
+				artRelin.on('value', function(snap) {
+					 if (snap.val().titulo.toLowerCase().includes(search.toLowerCase()) ){
+
+					 	if (snapshot.val()[art].tipo === "Documentos"){
+					 		let datos = {
+								descripcion: snap.val().descripcion,
+								fecha: snap.val().fecha,
+								img: snap.val().img,
+								titulo: snap.val().titulo,
+								temas: snap.val().temas,
+								usuario: snap.val().usuario,
+								nombre: snap.val().nombre,
+								downloadURL: snap.val().downloadURL,
+								key : art
+							}
+							tempDocs.push(datos)
+					 	}else {
+					 		let datos = {
+								descripcion: snap.val().descripcion,
+								fecha: snap.val().fecha,
+								img: snap.val().img,
+								titulo: snap.val().titulo,
+								temas: snap.val().temas,
+								usuario: snap.val().usuario,
+								key : art
+							}
+							tempPosts.push(datos)
+					 	}
+					 	
+					 }
+				});
+			}
+			t.setState({
+				documentos : tempDocs,
+				posts : tempPosts
+			})
+			
+		});
+	}
+	handleChange(e) {
+    	//this.setState({text: e.target.value});
+   		let t =this
+   		let search=ReactDOM.findDOMNode(this.refs.search).value
+   		console.log(ReactDOM.findDOMNode(this.refs.search).value)
+    	let artRel = firebase.database().ref('Foros/');
+		artRel.on('value', function(snapshot) {
+			let tempDocs = []
+			let tempPosts = []
+			for (let art in snapshot.val()){
+				let artRelin = firebase.database().ref(`${snapshot.val()[art].tipo}/${snapshot.val()[art].usuario}/${art}`);
+				artRelin.on('value', function(snap) {
+					 if (snap.val().titulo.includes(search) ){
+
+					 	if (snapshot.val()[art].tipo === "Documentos"){
+					 		let datos = {
+								descripcion: snap.val().descripcion,
+								fecha: snap.val().fecha,
+								img: snap.val().img,
+								titulo: snap.val().titulo,
+								temas: snap.val().temas,
+								usuario: snap.val().usuario,
+								nombre: snap.val().nombre,
+								downloadURL: snap.val().downloadURL,
+								key : art
+							}
+							tempDocs.push(datos)
+					 	}else {
+					 		let datos = {
+								descripcion: snap.val().descripcion,
+								fecha: snap.val().fecha,
+								img: snap.val().img,
+								titulo: snap.val().titulo,
+								temas: snap.val().temas,
+								usuario: snap.val().usuario,
+								key : art
+							}
+							tempPosts.push(datos)
+					 	}
+					 	
+					 }
+				});
+			}
+			t.setState({
+				documentos : tempDocs,
+				posts : tempPosts
+			})
+			
+		});
+  	}
+  	showPosts(){
+  		return (
+  			<div>
+  			{
+	            this.state.posts.map( (post) => (
+	            	<NormalTargetPost key={post.key} post={post}/>
+	            ))
+	        }
+	        </div>
+  		)
+  	}
+  	showDocs(){
+  		return (
+  			<div>
+  			{
+	           	this.state.documentos.map( (doc) => (
+	           		<DocTargetPost key={doc.key} doc={doc}/>
+	          	))
+	        }
+	        </div>
+  		)
+  	}
+	render() {
+		
+		return (
+				<div className="container">
+					<div className="nav-wrapper card ">
+				      <form >
+				        <div className="input-field">
+				          <input ref="search" type="search" onChange={this.handleChange} required />
+				          <label className="label-icon" htmlFor="search"><i className="material-icons">search</i></label>
+				          <i className="material-icons">close</i>
+				        </div>
+				      </form>
+				    </div>
+				    <div className="row">
+				    	{this.showDocs()}
+				    	{this.showPosts()}
+				    </div>
+				    
+
+
+				    
+				    
+
+				</div>
+			)
+	}
+
+}
+class FormComentarios extends Component {
+	constructor(props) {
+		super(props);
+		this.handleSubmit = this.handleSubmit.bind(this)
+		this.state = {
+			foro :null,
+			user:null
 		}
 	}
 	componentDidMount() {
-		let t = this
-		var PostsRef = firebase.database().ref('Posts/' + this.props.match.params.user);
-		PostsRef.on('value', function(snapshot) {
-			let temp = []
-			for (let doc in snapshot.val()){
-				temp.push(snapshot.val()[doc])
-			}
-			t.setState({posts : temp})
-		});
+	    firebase.auth().onAuthStateChanged(user => {
+	      this.setState({ user })
+	    })
+	  }
 
+	componentWillMount() {
+	 	this.setState({foro:this.props.foro})
 	}
-	componentWillReceiveProps(nextProps) {
-		let t = this
-
-		var PostsRef = firebase.database().ref('Posts/' + nextProps.match.params.user);
-		PostsRef.on('value', function(snapshot) {
-			let temp = []
-			for (let doc in snapshot.val()){
-				temp.push(snapshot.val()[doc])
-			}
-			t.setState({posts : temp})
-		});
-
-	}
-
+  	componentWillReceiveProps(nextProps) {
+  		this.setState({foro:nextProps.foro})
+  	}
+	handleSubmit(e) {
+        e.preventDefault();
+        let id = Date.now()
+        let mesajesDB = firebase.database().ref().child("Comentarios/"+this.state.foro+"/"+id)
+        let t = this
+        var fecha=new Date()
+        var newItem = {
+        	id: id,
+          text: ReactDOM.findDOMNode(t.refs.mensajeInput).value,
+          date : fecha.getDate() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":"+ fecha.getMinutes(),
+          photoURL : this.state.user.photoURL,
+          user : this.state.user.displayName
+        };
+        ReactDOM.findDOMNode(t.refs.mensajeInput).value=""
+        mesajesDB.set(newItem)
+    }
 	render() {
 		return(
-			<div className="row">
-          		<h5><i className="material-icons left">question_answer</i>Foros creados</h5>
-            	{
-            		this.state.posts.map( (post) => (
-            			<NormalPost key={post.img} post={post}/>
-            		))
-            	}
-          	</div>
+			<div ><br/>
+				<h4 className="flow-text green-text text-darken-4">Comentarios</h4>
+				<form onSubmit={this.handleSubmit} className="row">
+                <div className="col l9">
+                  <input ref="mensajeInput" className="white" />
+                </div>
+                <div className="col l2 right-align">
+                  <button className="btn red white-text"><i className="material-icons">send</i></button>
+                </div>
+              </form>
+			</div>
 			)
 	}
 }
 
-class PostsArchivos extends Component{
+class ListaItems extends Component {
 	constructor(props) {
-		super(props);
-		this.state = {
-			docs : []
-		}
+        super(props);
+         this.state={
+          foro: null,
+          item : null,
+          favorite : false,
+          likes:0
+        }
+      }
+     componentWillMount() {
+	 	this.setState({foro : this.props.foro,item:this.props.item})
+	 	
+	}
+  	componentWillReceiveProps(nextProps) {
+  		this.setState({foro : nextProps.foro,item:nextProps.item})
+  	}
+	render() {
+        return (
+            <li className="collection-item avatar right-align"> 
+                <img  src={this.state.item.photoURL} style={{width:40, height:40 }}  alt="" className="circle"/>
+                <strong className="title green-text text-darken-4">{this.state.item.user}</strong>
+                <p>{this.state.item.text}<br/><span className="blue-text">{this.state.item.date}</span></p> 
+            </li>
+        )
+    } 
+}
+
+class Lista extends Component {
+	constructor(props) {
+        super(props);
+        this.state={
+          items: []
+        }
+      }
+
+      componentWillMount() {
+		let mDB = firebase.database().ref().child("Comentarios/"+this.props.foro)
+         mDB.on('value', snap => {
+          let temp = []
+        	for ( let i in snap.val()){
+        		temp.push(snap.val()[i])
+        	}
+          this.setState({items: temp})
+        })
 	}
 	componentDidMount() {
-		let t = this
-		var DocumentsRef = firebase.database().ref('Documentos/' + this.props.match.params.user);
-		
-		DocumentsRef.on('value', function(snapshot) {
-			let temp = []
-			for (let doc in snapshot.val()){
-				temp.push(snapshot.val()[doc])
-			}
-			t.setState({docs : temp})
-		});
-
+		let mDB = firebase.database().ref().child("Comentarios/"+this.props.foro)
+         mDB.on('value', snap => {
+          let temp = []
+        	for ( let i in snap.val()){
+        		temp.push(snap.val()[i])
+        	}
+          this.setState({items: temp})
+        })
 	}
-	componentWillReceiveProps(nextProps) {
-		let t = this
 
-		var DocumentsRef = firebase.database().ref('Documentos/' + nextProps.match.params.user);
-		
-		DocumentsRef.on('value', function(snapshot) {
-			let temp = []
-			for (let doc in snapshot.val()){
-				temp.push(snapshot.val()[doc])
-				console.log(snapshot.val()[doc])
-			}
-			t.setState({docs : temp})
-		});
+  	componentWillReceiveProps(nextProps) {
+		let mDB = firebase.database().ref().child("Comentarios/"+nextProps.foro)
+        mDB.on('value', snap => {
+        	let temp = []
+        	for ( let i in snap.val()){
+        		temp.push(snap.val()[i])
+        	}
+          this.setState({items: temp})
+        })
+  	}
 
-	}
+	
+
 	render() {
-		return(
-			<div className="row">
-          		<h5>Foros de tus Archivos</h5>
-           		{
-           			this.state.docs.map( (doc) => (
-           				<DocPost key={doc.downloadURL} doc={doc}/>
-          			))
-           		}
-          	</div>
-			)
-	}
+        return (
+          <ul className="collection"  >
+            {this.state.items.reverse().map(item => (
+              <ListaItems key={item.id} foro={this.state.foro} item={item} />
+            ))}
+          </ul>
+        );
+      }
 }
 
+class ForosArticulosArchivo extends Component {
+  	constructor(props) {
+    	super(props);
+    	this.tieneTemas = this.tieneTemas.bind(this)
+    	this.state = {
+    		key:null,
+      		contentType: "",
+			descripcion:"",
+			downloadURL:"", 
+			fecha: "",
+			img: "",
+			nombre:"", 
+			temas:[],
+			titulo: "",
+			usuario: "",foto:"",email:""
+    	}
+  	}
+
+  	componentWillMount() {
+
+	    let t = this
+
+	  	let foros= firebase.database().ref('Foros/'+this.props.match.params.key);
+		foros.on('value', function(snapshot) {
+		  	let documento= firebase.database().ref('Documentos/'+snapshot.val().usuario+"/"+t.props.match.params.key);
+		  	documento.on('value', function(snap) {
+		  		let foto= firebase.database().ref('Usuarios/'+snap.val().usuario+"/");
+		  		foto.on('value', function(snapfoto) {
+		  			t.setState({foto : snapfoto.val().foto,email : snapfoto.val().email,})
+		  		});
+		  		let newState ={
+		  			key:t.props.match.params.key,
+			      	contentType: snap.val().contentType,
+					descripcion:snap.val().descripcion,
+					downloadURL:snap.val().downloadURL, 
+					fecha: snap.val().fecha,
+					img: snap.val().img,
+					nombre:snap.val().nombre, 
+					temas:snap.val().temas,
+					titulo: snap.val().titulo,
+					usuario: snap.val().usuario
+			    }
+			    t.setState(newState)
+		  	 });	
+	    });
+	}
+  	componentWillReceiveProps(nextProps) {
+
+    	let t = this
+
+      	let foros= firebase.database().ref('Foros/'+nextProps.match.params.key);
+
+      	foros.on('value', function(snapshot) {
+      		let documento= firebase.database().ref('Documentos/'+snapshot.val().usuario+"/"+t.props.match.params.key);
+      		documento.on('value', function(snap) {
+      			let foto= firebase.database().ref('Usuarios/'+snap.val().usuario+"/");
+		  		foto.on('value', function(snapfoto) {
+		  			t.setState({foto : snapfoto.val().foto,email : snapfoto.val().email,})
+		  		});
+      			let newState ={
+      				key :t.props.match.params.key,
+		      		contentType: snap.val().contentType,
+					descripcion:snap.val().descripcion,
+					downloadURL:snap.val().downloadURL, 
+					fecha: snap.val().fecha,
+					img: snap.val().img,
+					nombre:snap.val().nombre, 
+					temas:snap.val().temas,
+					titulo: snap.val().titulo,
+					usuario: snap.val().usuario
+		    	}
+		    	t.setState(newState)
+      	 	});
+        });
+  	}
+  	tieneTemas (){
+	  	return(
+	  		<div>
+	  			{
+	  				this.state.temas.map(tema =>
+	  					(<div key={tema} className="chip">{tema}</div>)
+	  					)
+	  			}
+	  		</div>
+	  		)
+	  }
+	  noTieneTemas (){
+	  	return(
+	  		<div>No tiene temas</div>
+	  		)
+	  }
+  	render() {
+    	return(
+      	<div className="row">
+      	<br/>
+      		<div className="container">
+	        	
+	      		<div className="col l12 center" style={{height:450}}>
+	      			<h4 className="flow-text green-text text-darken-4">{this.state.titulo}</h4>
+	      			<h5 className="flow-text">{this.state.descripcion}</h5><br/>
+	      			<img  alt="" src={this.state.img} className="responsive-img"/>
+	      			{this.state.temas ? this.tieneTemas():this.noTieneTemas()}
+		        	<div className="row">
+		        		<div className="col s12 l12">
+		        			<img alt="" src={this.state.foto} className="circle" style={{width: 60, height:60}}/>
+		        		</div>
+		        		<div className="col s12 l12 ">
+		        			<h6 ><strong className="green-text text-darken-4">{this.state.usuario}</strong><br/>
+		        			{this.state.email}</h6>
+		        		</div>
+		        	</div>
+	        		<a href={this.state.downloadURL} download={this.state.nombre}  className=" hide-on-large-only btn red activator"><i className="material-icons left">file_download</i>Descargar</a>
+			    	<iframe className="hide-on-small-only" style={{width:"100%",height:"200%"}} src={this.state.downloadURL} frameBorder="0" allowFullScreen></iframe>
+	      			
+	      			<FormComentarios foro={this.state.key} />
+	      			<Lista foro={this.state.key}/>
+	      		</div>
+	      		
+			</div>	
+
+      </div>
+      )
+  }
+}
+
+class ForosArticulos extends Component {
+  	constructor(props) {
+    	super(props);
+    	this.tieneTemas = this.tieneTemas.bind(this)
+    	this.state = {
+    		key:null,
+      		contentType: "",
+			descripcion:"",
+			downloadURL:"", 
+			fecha: "",
+			img: "",
+			nombre:"", 
+			temas:[],
+			titulo: "",
+			usuario: "",foto:"",email:""
+    	}
+  	}
+
+  	componentWillMount() {
+
+	    let t = this
+
+	  	let foros= firebase.database().ref('Foros/'+this.props.match.params.key);
+		foros.on('value', function(snapshot) {
+		  	let documento= firebase.database().ref('Posts/'+snapshot.val().usuario+"/"+t.props.match.params.key);
+		  	documento.on('value', function(snap) {
+		  		let foto= firebase.database().ref('Usuarios/'+snap.val().usuario+"/");
+		  		foto.on('value', function(snapfoto) {
+		  			t.setState({foto : snapfoto.val().foto,email : snapfoto.val().email,})
+		  		});
+		  		let newState ={
+		  			key:t.props.match.params.key,
+					descripcion:snap.val().descripcion,
+					fecha: snap.val().fecha,
+					img: snap.val().img,
+					nombre:snap.val().nombre, 
+					temas:snap.val().temas,
+					titulo: snap.val().titulo,
+					usuario: snap.val().usuario
+			    }
+			    t.setState(newState)
+		  	 });	
+	    });
+	}
+  	componentWillReceiveProps(nextProps) {
+
+    	let t = this
+
+      	let foros= firebase.database().ref('Foros/'+nextProps.match.params.key);
+
+      	foros.on('value', function(snapshot) {
+      		let documento= firebase.database().ref('Posts/'+snapshot.val().usuario+"/"+t.props.match.params.key);
+      		documento.on('value', function(snap) {
+      			let foto= firebase.database().ref('Usuarios/'+snap.val().usuario+"/");
+		  		foto.on('value', function(snapfoto) {
+		  			t.setState({foto : snapfoto.val().foto,email : snapfoto.val().email,})
+		  		});
+      			let newState ={
+      				key :t.props.match.params.key,
+					descripcion:snap.val().descripcion,
+					fecha: snap.val().fecha,
+					img: snap.val().img,
+					nombre:snap.val().nombre, 
+					temas:snap.val().temas,
+					titulo: snap.val().titulo,
+					usuario: snap.val().usuario
+		    	}
+		    	t.setState(newState)
+      	 	});
+        });
+  	}
+  	tieneTemas (){
+	  	return(
+	  		<div>
+	  			{
+	  				this.state.temas.map(tema =>
+	  					(<div key={tema} className="chip">{tema}</div>)
+	  					)
+	  			}
+	  		</div>
+	  		)
+	  }
+	  noTieneTemas (){
+	  	return(
+	  		<div>No tiene temas</div>
+	  		)
+	  }
+  	render() {
+    	return(
+      	<div className="row">
+      	<br/>
+      		<div className="container">
+	        	
+	      		<div className="col l12 center" style={{height:450}}>
+	      			<h4 className="flow-text green-text text-darken-4">{this.state.titulo}</h4>
+	      			<h5 className="flow-text">{this.state.descripcion}</h5><br/>
+	      			
+	      			{this.state.temas ? this.tieneTemas():this.noTieneTemas()}
+		        	<div className="row">
+		        		<div className="col s12 l12">
+		        			<img alt="" src={this.state.foto} className="circle" style={{width: 60, height:60}}/>
+		        		</div>
+		        		<div className="col s12 l12 ">
+		        			<h6 ><strong className="green-text text-darken-4">{this.state.usuario}</strong><br/>
+		        			{this.state.email}</h6>
+		        		</div>
+		        	</div>
+		        	<img  alt="" src={this.state.img} className="responsive-img"/>
+	      			<FormComentarios foro={this.state.key} />
+	      			<Lista foro={this.state.key}/>
+	      		</div>
+	      		
+			</div>	
+
+      </div>
+      )
+  }
+}
 class Posts extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			posts : [],
-			docs : []
-		}
-	}
-	componentDidMount() {
-		let t = this
-		
-
-		var PostsRef = firebase.database().ref('Posts/' + this.props.user.displayName);
-		PostsRef.on('value', function(snapshot) {
-			let temp = []
-			for (let doc in snapshot.val()){
-				temp.push(snapshot.val()[doc])
-			}
-			t.setState({posts : temp})
-		});
-
-		
-	}
+	
 
 	render() {
 		return (
 			<Router>
-			<div className="container center">
-				<br/>
-				<ul className="tabs">
-			        <li className="tab col s3 white-text active">
-			        	<NavLink to={`/posts/${this.props.user.displayName}/archivos`} >Archivos</NavLink>
-			        </li>
-			        <li className="tab col s3 white-text">
-			        	<NavLink to={`/posts/${this.props.user.displayName}/creados`} >Articulos</NavLink>
-			        </li>
-			        <li className="tab col s3 white-text"><a href="#test4">Busqueda</a></li>
-			      </ul>
-			      <Redirect push to={`posts/${this.props.user.displayName}/archivos`}/>
-			     <Route path='/posts/:user/archivos' component={PostsArchivos} />
-			     <Route path='/posts/:user/creados' component={PostsCreados} />
-
-		          	
-		          
-
-			</div>
+				<div className="center">
+				
+				<div className="hide-on-large-only">
+					<br/><br/>
+					<br/>
+				</div>
+					<ul className="tabs">
+				        <li className="tab col s6">
+				        	<NavLink className="green-text text-lighten-3" activeClassName="active green-text text-darken-4" to={`/posts/${this.props.user.displayName}/archivos`} >Archivos</NavLink>
+				        </li>
+				        <li className="tab col s6">
+				        	<NavLink className="green-text text-lighten-3" activeClassName="active green-text text-darken-4" to={`/posts/${this.props.user.displayName}/creados`} >Articulos</NavLink>
+				        </li>
+				        <li className="tab"><NavLink className="green-text text-lighten-3" activeClassName="active green-text text-darken-4" to={`/posts/busqueda`} >Buscar</NavLink></li>
+				    	
+				    </ul>
+				    
+				     <Redirect push to={`/posts/busqueda`}/>
+				     <Route exact path='/posts/:user/archivos' component={PostsArchivos} />
+				     <Route path='/posts/:user/creados' component={PostsCreados} />
+				     <Route path='/posts/busqueda' component={PostBusqueda} />	
+				     <Route path='/foro/archivo/:key' component={ForosArticulosArchivo} />
+				     <Route path='/foro/articulo/:key' component={ForosArticulos} />
+					     
+				</div>
 
 			</Router>
 		)

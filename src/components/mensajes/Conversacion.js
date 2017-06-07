@@ -106,7 +106,7 @@ class MensajesEnLista extends Component {
   }
   render() {
     return(
-        <ul className=" " style={{overflow: "scroll" ,  height : "350px"}}>
+        <ul className=" " style={{overflow: "scroll" ,  height : "460px"}}>
           {this.props.mensajes.map( mensage => (
             <MensajeConver key={mensage.id} propietario={this.props.propietario} user={mensage.item.usuario} contenido={mensage.item.contenido} fecha={mensage.item.fecha} />
           ))}
@@ -184,10 +184,9 @@ class Conversacion extends Component {
   render() {
     return(
       <div className=""  >
-        <h6 className="center-align"><br/><strong>{this.state.tema}</strong></h6>
+        <h6 className="center-align green-text text-darken-4 "><br/><strong>{this.state.tema}</strong></h6>
         {this.state.mensajes ? this.muestraMensajes() : this.noMuestraMensajes()}
         <MensajeForm user={this.state.propietario} conversacion={this.state.id} />
-
       </div>
       )
   }

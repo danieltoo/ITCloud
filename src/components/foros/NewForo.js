@@ -46,7 +46,12 @@ class NewForo extends Component {
         (error) => { 
           this.setState({message : `ha ocurridoun error ${error.message}`})
         }, () => { 
-          firebase.database().ref('Posts/'+this.props.user.displayName).push({
+           let key = firebase.database().ref('Foros/').push({
+                usuario : this.props.user.displayName,
+                tipo : "Posts"
+              }).key
+
+          firebase.database().ref('Posts/'+this.props.user.displayName+"/"+ key).set({
             titulo : ReactDOM.findDOMNode(this.refs.titulo).value,
             descripcion : ReactDOM.findDOMNode(this.refs.descripcion).value,
             usuario : this.props.user.displayName, 

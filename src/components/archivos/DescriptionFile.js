@@ -53,9 +53,9 @@ class DescriptionFile extends Component {
 
 	render() {
 		return (
-			<Collapsible  style={{overflow: "scroll" ,  height :"450px"}}>
+			<Collapsible  style={{overflow: "scroll" ,  height :"660px"}}>
 					<li>
-				      <div className="collapsible-header"><h6>{this.props.doc.descripcion} </h6></div>
+				      <div className="collapsible-header "><h6><strong className="green-text text-darken-4">Descripción :</strong>{this.props.doc.descripcion} </h6></div>
 				    </li>
 				  <CollapsibleItem header='Temas' icon='class' className="active"  >
 				    {
@@ -66,7 +66,7 @@ class DescriptionFile extends Component {
 				    	)
 				    }
 				  </CollapsibleItem>
-				  <CollapsibleItem header='Link' icon='share' >
+				  <CollapsibleItem header='Link' icon='share ' className="green-text text-darken-4" >
 				    <textarea  defaultValue={this.props.doc.downloadURL} ref="textarea" >
 					 </textarea>
 					 <Row><br/>

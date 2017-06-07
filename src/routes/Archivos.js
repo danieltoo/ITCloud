@@ -51,9 +51,13 @@ class Archivos extends Component {
 	render() {
 		return (
 			<div className='content'>
+			<div className="hide-on-large-only">
+					<br/><br/>
+					<br/>
+				</div>
 				<div className="row">
 					<div className="col s12 l9">
-						<table className="highlight">
+						<table className="highlight green-text text-darken-4">
 							<thead>
 					          <tr>
 					              <th width={"40%"}>Titulo</th>
@@ -62,13 +66,13 @@ class Archivos extends Component {
 					          </tr>
 					        </thead>
 						</table>
-						<div className="card z-depth-3"  style={{overflow: "scroll" ,  height : "450px"}}>
+						<div className="card z-depth-3"  style={{overflow: "scroll" ,  height : "660px"}}>
 							<TableDocs user={this.props.user} chageCurrentFile={this.chageCurrentFile.bind(this)} getContFiles={this.getContFiles.bind(this)}/>
 						</div>
 					</div>
 
 					<div className="col s12 l3">
-						<table className="highlight">
+						<table className="highlight green-text text-darken-4">
 							<thead>
 					          <tr>
 					              <th>Descripción</th>

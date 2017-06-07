@@ -8,8 +8,8 @@ import FloatButton from './FloatButton.js'
 class Navbar extends React.Component {
   renderUserData () {
     return (
-      <header >
-          <nav className="nav-extended green darken-4 z-depth-3">
+      <header  >
+          <nav className="green darken-4 z-depth-3">
             <div className="nav-wrapper container">
               <NavLink id="logo-container" to="/home" className="brand-logo">
                 <img  alt="" src="/assets/img/logoITCLOUDB.png" width={40} height={60} style={{paddingTop : "10px",paddingBottom:"10px"}} />
@@ -144,7 +144,7 @@ class Navbar extends React.Component {
 
   render(){
     return (
-      <div>
+      <div >
         {this.props.user ? this.renderUserData() : this.renderLoginButton()}      
       </div>
     )

@@ -21,6 +21,8 @@ import Recientes from './routes/Recientes'
 import NotFound from './routes/404'
 
 
+
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -34,7 +36,6 @@ class App extends Component {
       this.setState({ user })
     })
   }
-   
   handleAuth(){
 
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -50,17 +51,7 @@ class App extends Component {
         })
       })
       .catch(error => console.error(`Error : ${error.code}: ${error.message}`))
-  }
-
-  handleAuthMovil(){
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithRedirect(provider)
-      .then(result => console.log(`${result.user.email} ha iniciado sesion`))
-      .catch(error => console.error(`Error : ${error.code}: ${error.message}`))
-
-  }
-
-  
+  }  
   handleLogout(){
     firebase.auth().signOut()
       .then(() =>{
@@ -69,8 +60,13 @@ class App extends Component {
     })
       .catch(error => console.error(`Error : ${error.code}: ${error.message}`))
   }
- 
+  handleAuthMovil(){
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(provider)
+      .then(result => console.log(`${result.user.email} ha iniciado sesion`))
+      .catch(error => console.error(`Error : ${error.code}: ${error.message}`))
 
+  }
   render() {
     return (
     <Router history={browerhHistory} >
@@ -90,7 +86,6 @@ class App extends Component {
                   <Landing />
                 )
               )}/>
-
               <Route exact path="/home" data={this.state.user} render={() => (
                 this.state.user ? (
                   <Home user={this.state.user} />
@@ -98,7 +93,6 @@ class App extends Component {
                   <Redirect to="/"/>
                 )
               )}/>
-
               <Route exact path="/recientes" render={() => (
                 this.state.user ? (
                   <Recientes />
@@ -113,8 +107,6 @@ class App extends Component {
                   <Redirect to="/"/>
                 )
               )}/>
-
-
               <Route exact path="/archivos" render={() => (
                 this.state.user ? (
                   <Archivos user={this.state.user}/>
@@ -122,7 +114,6 @@ class App extends Component {
                   <Redirect to="/"/>
                 )
               )}/>
-
               <Route exact path="/posts" render={() => (
                 this.state.user ? (
                   <Posts user={this.state.user}/>
@@ -130,8 +121,6 @@ class App extends Component {
                   <Redirect to="/"/>
                 )
               )}/>
-              
-
               <Route component={NotFound}/>
            </Switch>
         </div>

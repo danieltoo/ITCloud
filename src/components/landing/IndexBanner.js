@@ -5,10 +5,10 @@ class IndexBanner extends React.Component {
 
   render() {
     return (
-      <div className="parallax-container">
+      <div className="parallax-container" style={{height:"650"}}>
         <div className="section no-pad-bot">
           <div className="container">
-            <br /><br /><br /><br /><br />
+            <br /><br /><br /><br /><br /><br /><br />
             <h3 className="header center text-teal text-lighten-5">ITCloud Platform</h3>
             <div className="row center">
               <h5 className="header col s12 light">
@@ -16,7 +16,7 @@ class IndexBanner extends React.Component {
               </h5>
               <h6>DESARROLLADO EN:
                 <strong>
-                  INSTITUTO TECNOLÓGICO DE CUAUTLA COMENZAR 
+                   <br/> INSTITUTO TECNOLÓGICO DE CUAUTLA 
                 </strong>
               </h6>
             </div>

@@ -57,6 +57,8 @@ class NewMensaje extends Component {
         ReactDOM.findDOMNode(this.refs.tema).value=""
         ReactDOM.findDOMNode(this.refs.contenido).value=""
   }
+
+  
   render() {
     return (
       

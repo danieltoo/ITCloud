@@ -36,7 +36,7 @@ class MensajesList extends Component {
       <Router>
         <div className="row">
           <div className="col s12 m4 l4" >
-            <ul className="collection section " style={{overflow: "scroll" ,  height : "550px"}}>
+            <ul className="collection section " style={{overflow: "scroll" ,  height : "660px"}}>
               {this.state.conversaciones.reverse().map(item => (
                   <ItemList key={item.key}  item={item} user={this.props.user.displayName}  />
                 ))}

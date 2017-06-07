@@ -47,36 +47,27 @@ class NewFile extends Component {
           let file = this.state.file
           let storageRef = firebase.storage().ref('Documentos/'+this.props.user.displayName+'/'+file.name)
           let task = storageRef.put(file)
-
-          var URL ="" 
-          var content="" 
-          var name=""
-
+          var URL ="" ,content="" , name=""
           task.on('state_changed', (snapshot) => {
            let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) *100
-
-           this.setState({
-             unploadValue: Math.round(percentage)
-           })
-
-          }, (error) => {
-           this.setState({
-              message:`ha ocurridoun error ${error.message}`
-            })
+           this.setState({unploadValue: Math.round(percentage)})
+          }, (error) => {this.setState({message:`ha ocurridoun error ${error.message}`})
           }, () => {
             URL = task.snapshot.downloadURL
             content = task.snapshot.metadata.contentType
             name = task.snapshot.metadata.name
             var fecha=new Date()
-
             let imgRef = firebase.storage().ref('Imagenes/'+this.props.user.displayName+'/'+this.state.imgFile.name)
             let taskImg = imgRef.put(this.state.imgFile)
-
             taskImg.on('state_changed', (snapshot) => {},
             (error) => { 
               this.setState({message : `ha ocurridoun error ${error.message}`})
             }, () => { 
-              firebase.database().ref('Documentos/'+this.props.user.displayName).push({
+              let key = firebase.database().ref('Foros/').push({
+                usuario : this.props.user.displayName,
+                tipo : "Documentos"
+              }).key
+              firebase.database().ref('Documentos/'+this.props.user.displayName+"/"+ key).set({
                 titulo : ReactDOM.findDOMNode(this.refs.titulo).value,
                 descripcion : ReactDOM.findDOMNode(this.refs.descripcion).value,
                 nombre  : name ,
@@ -86,17 +77,13 @@ class NewFile extends Component {
                 contentType : content,
                 img :  taskImg.snapshot.downloadURL,
                 fecha : fecha.getDate() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":"+ fecha.getMinutes()
-
               })
-
             })
             this.setState({
               message:"Archivo Subido"
             })
-
           })
         }
-
   }
   componentDidMount() {
     this.setState({img : logo})

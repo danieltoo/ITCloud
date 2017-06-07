@@ -47,14 +47,14 @@ class ItemList extends Component {
   }
   render() { 
       return(
-          <li className="collection-item avatar">
+          <li className="collection-item avatar ">
             <ImgItemList key={this.state.destino} id={this.state.destino}/>
-            <span className="title">Tema : {this.state.tema}</span>
+            <strong className="title green-text text-darken-4">Tema : {this.state.tema}</strong>
             <p>{this.state.destino}<br/>
               Ultimo mensaje: {this.state.ultimo} {this.state.fecha}<br/>
             </p>
             <Link to={`/mensajes/${this.props.user}/${this.props.item.key}`}  className="secondary-content">
-              <i className="material-icons">send</i>
+              <i className="material-icons green-text text-darken-4">send</i>
             </Link>
           </li>   
       )

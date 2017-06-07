@@ -27,9 +27,9 @@ class ImgItemList extends Component {
 
   render() {
     return(
-        <div>
+        <span>
           {this.state.foto ? this.showData() : this.preload() }
-        </div>
+        </span>
 
       )
 
